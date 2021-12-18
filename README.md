@@ -1,4 +1,4 @@
-# Dockervol
+# dockervol
 
 A command line tool for simplified docker volume command built with go.
 
