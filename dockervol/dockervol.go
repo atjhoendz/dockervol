@@ -69,9 +69,6 @@ func parseVolumes(volumes []string, parsedVolumes *[]DockerVolume) {
 
 func execRemoveListVolume(volumes []string) {
 	for i, volume := range volumes {
-		if i > 65 {
-			break
-		}
 		_, err := exec.Command("docker", "volume", "rm", volume).Output()
 
 		if err != nil {
