@@ -67,19 +67,24 @@ func parseVolumes(volumes []string, parsedVolumes *[]DockerVolume) {
 	}
 }
 
-func execRemoveListVolume(volumes []string) {
+func execRemoveListVolume(volumes []string, count int) {
 	for i, volume := range volumes {
+		if i >= count {
+			break
+		}
+
 		_, err := exec.Command("docker", "volume", "rm", volume).Output()
 
 		if err != nil {
 			log.Printf("Volume with name %s cannot be removed, caused by %v\n", volume, err)
+			break
 		} else {
-			log.Printf("Volume %s removed successfully | Progress: %d of %d volume removed\n", volume, i+1, len(volumes))
+			log.Printf("Volume %s removed successfully | Progress: %d of %d volumes removed\n", volume, i+1, len(volumes))
 		}
 	}
 }
 
-func RemoveAnonymousVolume() error {
+func RemoveAnonymousVolume(count int) error {
 	byteVolumes, err := exec.Command("docker", "volume", "ls", "--format", `{{.Name}}`).Output()
 
 	if err != nil {
@@ -92,7 +97,7 @@ func RemoveAnonymousVolume() error {
 
 	anonymousVolumes := getAnonymousVolume(listVolume)
 
-	execRemoveListVolume(*anonymousVolumes)
+	execRemoveListVolume(*anonymousVolumes, count)
 
 	return nil
 }
